@@ -5,7 +5,6 @@ import { useReveal } from '../hooks/useReveal';
 import { EMPTY_FORM, submitContact, validate, type ContactErrors, type ContactForm } from '../lib/contact';
 
 interface ContactProps {
-  /** Service chosen from the Services section (pre-fills the select). */
   presetService?: { title: string; nonce: number } | null;
 }
 
@@ -83,7 +82,7 @@ export function Contact({ presetService }: ContactProps) {
       aria-labelledby={`${uid}-title`}
       className="relative mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 sm:py-24 md:py-32"
     >
-      {/* ── Section header ── */}
+      {/* Başlık */}
       <div className="hairline grid gap-4 border-b pb-8 md:grid-cols-12 md:items-end md:gap-8 md:pb-14">
         <div className="md:col-span-7">
           <span className="eyebrow reveal">İletişim & Randevu</span>
@@ -98,7 +97,7 @@ export function Contact({ presetService }: ContactProps) {
       </div>
 
       <div className="mt-8 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-16">
-        {/* ── Info + Map ── */}
+        {/* İletişim bilgileri ve Harita */}
         <div className="flex flex-col gap-6 md:gap-10 lg:col-span-5">
           <dl className="m-0 grid gap-0">
             <InfoRow label="Adres" d={0}>
@@ -128,7 +127,7 @@ export function Contact({ presetService }: ContactProps) {
             </InfoRow>
           </dl>
 
-          {/* Map */}
+          {/* Harita */}
           <figure className="reveal relative m-0 overflow-hidden rounded-[24px] border hairline" style={delay(220)}>
             <div className="relative aspect-[16/10] w-full bg-[#2a1420] sm:aspect-[4/3]">
               <iframe
@@ -140,7 +139,6 @@ export function Contact({ presetService }: ContactProps) {
                 style={{ filter: 'invert(0.92) hue-rotate(180deg) saturate(0.55) contrast(0.92) brightness(0.95)' }}
                 allowFullScreen
               />
-              {/* plum tint so the map belongs to the palette */}
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#3a0f2a]/25" />
             </div>
             <figcaption className="flex items-center justify-between gap-4 bg-white/[0.03] px-5 py-4">
@@ -158,7 +156,7 @@ export function Contact({ presetService }: ContactProps) {
           </figure>
         </div>
 
-        {/* ── Form ── */}
+        {/* Randevu Formu */}
         <div className="reveal lg:col-span-7" style={delay(120)}>
           <div className="relative rounded-[22px] border hairline bg-white/[0.035] p-5 backdrop-blur-xl sm:rounded-[28px] sm:p-10">
             {status === 'success' ? (
@@ -280,7 +278,7 @@ export function Contact({ presetService }: ContactProps) {
                     {err('message')}
                   </div>
 
-                  {/* Honeypot (hidden from users & assistive tech) */}
+                  {/* Bot koruması */}
                   <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
                     <label>
                       Website

@@ -1,23 +1,12 @@
-/**
- * ════════════════════════════════════════════════════════════════
- *  ESTEPINK — İŞLETME BİLGİLERİ
- *  Aşağıdaki örnek (sahte) bilgileri kendi bilgilerinizle değiştirin.
- *  Not: Form mesajlarının gideceği adres backend/.env → MAIL_TO
- * ════════════════════════════════════════════════════════════════
- */
-
+// Estepink iletişim ve adres bilgileri
 export const CONTACT = {
-  /** Sitede gösterilen e-posta adresi */
   email: 'info@estepink-ornek.com',
-  /** Ekranda görünen telefon */
   phoneDisplay: '0531 481 25 26',
-  /** tel: linki için, sadece rakam ve + */
   phoneHref: '+905314812526',
   address: {
     line1: 'İsmetpaşa, 49. Sk. No:1',
     line2: '34270 Sultangazi / İstanbul',
   },
-  /** Google Maps'te aranacak metin (adres veya işletme adı) */
   mapsQuery: 'Estepink Estetik ve Güzellik, İsmetpaşa, 49. Sk. No:1, 34270 Sultangazi/İstanbul',
   hours: [
     { days: 'Pazartesi – Cumartesi', time: '10:00 – 20:00' },

@@ -2,7 +2,7 @@ import { useId, useRef, useState, type CSSProperties } from 'react';
 import { SERVICES, getServiceWhatsAppUrl } from '../content/site';
 import { useReveal } from '../hooks/useReveal';
 
-/** Services shown per slide. */
+// Sayfa başına gösterilen hizmet sayısı
 const PER_PAGE = 4;
 const PAGES: (typeof SERVICES)[number][][] = Array.from(
   { length: Math.ceil(SERVICES.length / PER_PAGE) },
@@ -10,7 +10,6 @@ const PAGES: (typeof SERVICES)[number][][] = Array.from(
 );
 
 interface ServicesProps {
-  /** Pre-select a service in the contact form and scroll there. */
   onRequest: (serviceTitle?: string) => void;
 }
 
@@ -48,7 +47,7 @@ export function Services({ onRequest }: ServicesProps) {
       className="relative mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 sm:py-24 md:py-32"
     >
       <div className="grid gap-8 sm:gap-14 lg:grid-cols-12 lg:gap-20">
-        {/* ── Intro column ── */}
+        {/* Başlık ve açıklama */}
         <header className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
             <span className="eyebrow reveal">Hizmetlerimiz</span>
@@ -90,7 +89,7 @@ export function Services({ onRequest }: ServicesProps) {
           </div>
         </header>
 
-        {/* ── Service slider ── */}
+        {/* Hizmet listesi */}
         <div className="lg:col-span-7" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div className="overflow-hidden">
             <div

@@ -10,11 +10,10 @@ interface HeroPlaneProps {
   hero: Texture;
   poster: Texture;
   reduced: boolean;
-  /** Touch devices: skip the animated light sweep. */
   calm?: boolean;
 }
 
-/** Full-screen hero plane rendered as a child of the camera. */
+// Kamera önündeki 3D hero düzlemi
 export function HeroPlane({ hero, poster, reduced, calm = false }: HeroPlaneProps) {
   const m = useMotion();
   const mesh = useRef<Mesh>(null);
@@ -56,14 +55,14 @@ export function HeroPlane({ hero, poster, reduced, calm = false }: HeroPlaneProp
     const now = performance.now();
     const aspect = size.width / size.height;
 
-    // Cover camera frustum at z = HERO.z
+    // Görünüm alanına göre ölçekleme
     const h = 2 * Math.abs(HERO.z) * Math.tan(MathUtils.degToRad(cam.fov / 2));
     plane.scale.set(h * aspect, h, 1);
 
     const start = m.introStart;
     const elapsed = start === null ? 0 : (now - start) / 1000;
 
-    // Fades smoothly when scrolled down past hero
+    // Aşağı kaydırıldıkça yumuşak solma
     const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
     const fadeOutThreshold = typeof window !== 'undefined' ? window.innerHeight * 0.75 : 600;
     const o = Math.max(0, 1 - scrollY / Math.max(1, fadeOutThreshold));

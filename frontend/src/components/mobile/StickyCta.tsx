@@ -4,10 +4,7 @@ interface StickyCtaProps {
   onClick: () => void;
 }
 
-/**
- * Bottom "Randevu Al" bar (phones only). Hidden while the contact section is
- * on screen. Publishes its height as --cta-h so floating buttons sit above it.
- */
+// Mobilde altta sabit duran Randevu Al butonu
 export function StickyCta({ onClick }: StickyCtaProps) {
   const [visible, setVisible] = useState(true);
 

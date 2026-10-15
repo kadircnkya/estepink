@@ -7,7 +7,7 @@ const SECTIONS = [
   { id: 'iletisim', label: 'Randevu' },
 ] as const;
 
-/** Right-edge dot indicator showing which full-screen section is active. */
+// Mobilde sağ kenardaki bölüm gösterge noktaları
 export function SectionDots() {
   const [active, setActive] = useState<string>('giris');
 

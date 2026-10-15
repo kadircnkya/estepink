@@ -8,7 +8,7 @@ export const contactRouter = Router();
 contactRouter.post('/', rateLimit({ windowMs: 15 * 60_000, max: 5 }), async (req, res) => {
   const body = req.body ?? {};
 
-  // Honeypot: real users never fill the hidden "website" field.
+  // Bot koruması
   if (typeof body.website === 'string' && body.website.trim() !== '') {
     return res.json({ ok: true });
   }

@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
     <footer className="snap-end-section relative w-full px-4 pb-20 pt-6 sm:px-8 sm:pb-12 sm:pt-20">
       <div className="hairline mx-auto max-w-7xl border-t pt-5 sm:pt-16">
         <div className="grid grid-cols-1 gap-y-5 md:grid-cols-12 md:gap-12">
-          {/* Brand */}
+          {/* Logo ve slogan */}
           <div className="md:col-span-5">
             <img
               src={ASSETS.logo}
@@ -56,7 +56,7 @@ export const Footer: React.FC = () => {
             </li>
           </FooterCol>
 
-          {/* Mobilde sağ altta sabit Instagram ve WhatsApp butonları olduğu için bu sütun mobilde gizlendi */}
+          {/* Mobilde sağ altta sabit butonlar olduğu için bu sütun masaüstünde gösterilir */}
           <FooterCol title="Takip edin" className="hidden md:col-span-2 md:block">
             <li>
               <a href={LINKS.instagram} target="_blank" rel="noopener noreferrer" className="footer-link">

@@ -5,7 +5,7 @@ interface MobileServicesProps {
   onRequest: (serviceTitle?: string) => void;
 }
 
-/** Existing gallery photos reused as service covers. */
+// Hizmet kapak görselleri
 const COVER: Record<string, string> = {
   'lazer-epilasyon': '/images/g9.webp',
   'cilt-bakimi': '/images/g5.webp',
@@ -16,7 +16,7 @@ const COVER: Record<string, string> = {
 };
 const FALLBACK_COVER = '/images/g1.webp';
 
-/** Phone version: swipeable service cards + a bottom sheet for details. */
+// Mobil için kart geçişli hizmet listesi
 export function MobileServices({ onRequest }: MobileServicesProps) {
   const scroller = useRef<HTMLDivElement>(null);
   const raf = useRef(0);
@@ -43,7 +43,7 @@ export function MobileServices({ onRequest }: MobileServicesProps) {
     el.scrollTo({ left: i * (card.offsetWidth + 12), behavior: 'smooth' });
   };
 
-  // Bottom sheet: Esc to close, lock page scroll, focus the close button
+  // Detay penceresi açıkken arka plan kaydırmasını kilitle
   useEffect(() => {
     if (!sheet) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setSheet(null);
@@ -138,7 +138,7 @@ export function MobileServices({ onRequest }: MobileServicesProps) {
         ))}
       </div>
 
-      {/* Bottom sheet */}
+      {/* Hizmet detay modalı */}
       {sheet && (
         <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label={sheet.title}>
           <button

@@ -24,7 +24,7 @@ export const Book: React.FC<BookProps> = ({
   const [soundEnabled, setSoundEnabled] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Sync spread changes and play flip sound
+  // Sayfa değişimi ve ses efekti
   const setSpread = useCallback(
     (index: number) => {
       const clamped = Math.max(0, Math.min(BOOK_SPREADS.length - 1, index));
@@ -34,7 +34,6 @@ export const Book: React.FC<BookProps> = ({
         playPageFlipSound();
       }
 
-      // Determine which leaf flips
       if (clamped > activeSpread) {
         setFlippingLeaf(activeSpread);
       } else {
@@ -47,7 +46,6 @@ export const Book: React.FC<BookProps> = ({
         setInternalSpread(clamped);
       }
 
-      // Reset flipping state after animation completes
       const timer = window.setTimeout(() => {
         setFlippingLeaf(null);
       }, 650);
@@ -69,7 +67,7 @@ export const Book: React.FC<BookProps> = ({
     }
   }, [activeSpread, setSpread]);
 
-  // Keyboard navigation
+  // Klavye yön tuşları
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -85,7 +83,7 @@ export const Book: React.FC<BookProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext, handlePrev]);
 
-  // Touch swipe handling
+  // Dokunmatik kaydırma
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const onTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -113,7 +111,7 @@ export const Book: React.FC<BookProps> = ({
       aria-label="Estepink Açık Defter Galerisi"
       className="relative w-full flex flex-col items-center justify-center pt-14 pb-6 sm:pt-28 sm:pb-10 md:pt-32 px-2 sm:px-6 select-none"
     >
-      {/* Section Header */}
+      {/* Başlık */}
       <div className="mb-6 sm:mb-12 md:mb-14 flex flex-col items-center text-center max-w-xl px-4">
         <span className="eyebrow">Salon & Odalar</span>
         <h2 className="section-title mt-5 mb-4">
@@ -124,15 +122,15 @@ export const Book: React.FC<BookProps> = ({
         </p>
       </div>
 
-      {/* Desk surface shadow & 3D open book */}
+      {/* 3D Defter görünümü */}
       <div className="relative w-full flex flex-col items-center">
-        {/* Soft elliptical table drop shadow */}
+        {/* Masa gölgesi */}
         <div
           aria-hidden="true"
           className="absolute -bottom-6 sm:-bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[1100px] h-10 sm:h-14 rounded-[100%] bg-black/50 blur-2xl pointer-events-none"
         />
 
-        {/* 3D Book Container: ALWAYS side-by-side open book */}
+        {/* Açık defter gövdesi */}
         <div
           ref={containerRef}
           onTouchStart={onTouchStart}
@@ -153,7 +151,7 @@ export const Book: React.FC<BookProps> = ({
             ].join(', '),
           }}
         >
-          {/* Static Left Base: Photo 1 */}
+          {/* Sol sabit sayfa */}
           <div
             className="absolute top-0 left-0 bottom-0 w-1/2 rounded-l-[6px] overflow-hidden"
             style={{
@@ -164,7 +162,7 @@ export const Book: React.FC<BookProps> = ({
             <PhotoPage spread={BOOK_SPREADS[0]!} isPriority={true} />
           </div>
 
-          {/* Static Right Base: Text 9 (Randevu) */}
+          {/* Sağ sabit sayfa */}
           <div
             className="absolute top-0 right-0 bottom-0 w-1/2 rounded-r-[6px] overflow-hidden"
             style={{
@@ -175,12 +173,11 @@ export const Book: React.FC<BookProps> = ({
             <TextPage spread={BOOK_SPREADS[8]!} />
           </div>
 
-          {/* 8 Flipping Leaves */}
+          {/* Çevrilen yapraklar */}
           {Array.from({ length: leavesCount }, (_, k) => {
             const isTurned = k < activeSpread;
             const isFlipping = flippingLeaf === k;
 
-            // Proper stacking z-index
             let zIndex = 10;
             if (isFlipping) {
               zIndex = 50;
@@ -204,7 +201,7 @@ export const Book: React.FC<BookProps> = ({
             );
           })}
 
-          {/* Center Vertical Spine Overlay */}
+          {/* Defter orta dikiş çizgisi */}
           <div
             aria-hidden="true"
             className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-6 md:w-8 pointer-events-none z-40"
@@ -213,12 +210,11 @@ export const Book: React.FC<BookProps> = ({
                 'linear-gradient(to right, rgba(43,16,32,0.16) 0%, rgba(43,16,32,0.04) 15%, transparent 45%, transparent 55%, rgba(43,16,32,0.04) 85%, rgba(43,16,32,0.16) 100%)',
             }}
           >
-            {/* Delicate stitched center line */}
             <div className="absolute left-1/2 top-2 sm:top-4 bottom-2 sm:bottom-4 -translate-x-1/2 border-r border-dashed border-pink/25" />
           </div>
         </div>
 
-        {/* Navigation Controls: Prev / Next / Dots / Sound Toggle */}
+        {/* Defter kontrolleri */}
         <BookControls
           currentSpread={activeSpread}
           totalSpreads={totalSpreads}

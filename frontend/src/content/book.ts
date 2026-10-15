@@ -1,10 +1,8 @@
 export interface BookSpread {
   id: string;
   index: number;
-  /** Image source in /public/images */
   image: string;
   alt: string;
-  /** Focus position {x, y} for CSS object-position (e.g. 50% 50%) */
   focus: { x: number; y: number };
   tag: string;
   title: string;

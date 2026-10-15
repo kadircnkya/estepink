@@ -1,13 +1,4 @@
-/**
- * Leaf.tsx — Gerçekçi kitap sayfası çevirme animasyonu
- *
- * CSS-only rotateY yerine requestAnimationFrame tabanlı fizik:
- * • Spring easing (açılır, biraz aşar, yerleşir)
- * • Sayfanın kıvrıldığı noktada dinamik skewY + scaleX
- * • Dönerken yüz değişimi (backface flip, mid-point'te)
- * • Canlı page-shadow (sol ya da sağda derinlik)
- * • Sayfa ortasında beyaz şerit parlama (gerçek kağıt yansıması)
- */
+// Kitap sayfası çevirme animasyonu ve gölge efektleri
 import React, { useEffect, useRef } from 'react';
 import type { BookSpread } from '../../content/book';
 import { PhotoPage } from './PhotoPage';
@@ -140,9 +131,8 @@ export const Leaf: React.FC<LeafProps> = ({
     // ScaleX: sayfanın "katlanması" — ama çok az ki içerik okunabilsin
     const scaleX = 1 - curve * 0.04;
 
-    container.style.transform = `rotateY(${angle}deg) skewY(${
-      angle < 0 ? -skew : skew
-    }deg) scaleX(${scaleX})`;
+    container.style.transform = `rotateY(${angle}deg) skewY(${angle < 0 ? -skew : skew
+      }deg) scaleX(${scaleX})`;
 
     // Gölge: dönme yönüne göre sola ya da sağa düşer
     const shadowIntensity = curve * 0.55;

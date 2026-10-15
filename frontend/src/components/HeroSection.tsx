@@ -29,9 +29,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
       aria-label="Giriş Bölümü"
       className="snap-section relative min-h-[100svh] md:min-h-[92svh] flex flex-col justify-end pb-28 md:pb-24 px-4 sm:px-8 max-w-7xl mx-auto pointer-events-none"
     >
-      {/* Hero Glass Card */}
+      {/* Giriş kartı */}
       <div className="pointer-events-auto glass relative max-w-[min(620px,94vw)] rounded-[28px] p-6 sm:p-8 md:p-10 shadow-[0_12px_40px_rgba(43,16,32,0.14),inset_0_0_0_1px_rgba(255,255,255,0.7)]">
-        {/* Rose-gold accent bar */}
+        {/* Kenar çizgisi */}
         <div
           aria-hidden="true"
           className="absolute left-0 top-0 bottom-0 w-[4px] rounded-l-[28px]"
@@ -40,7 +40,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
           }}
         />
 
-        {/* Eyebrow */}
+        {/* Üst etiket */}
         <div className="mb-3 flex items-center gap-2">
           <span className="font-sans text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-pink uppercase">
             Estepink Güzellik & Epilasyon
@@ -48,17 +48,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
           <div className="h-px flex-1 bg-pink/20" />
         </div>
 
-        {/* Main Title */}
+        {/* Ana başlık */}
         <h1 className="font-serif text-[clamp(32px,6.5vw,56px)] leading-[1.04] tracking-tight text-ink mb-4">
           <RichTitle text={HERO_COPY.title} />
         </h1>
 
-        {/* Body */}
+        {/* Açıklama */}
         <p className="font-sans text-[15px] sm:text-[16px] md:text-[17px] leading-relaxed text-[#7a5566] max-w-[48ch] mb-6">
           {HERO_COPY.body}
         </p>
 
-        {/* Service badges */}
+        {/* Hizmet etiketleri */}
         <div className="mb-6 flex flex-wrap gap-2">
           {HERO_COPY.tags.map((tag) => (
             <span
@@ -70,7 +70,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
           ))}
         </div>
 
-        {/* Action buttons */}
+        {/* Butonlar */}
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"

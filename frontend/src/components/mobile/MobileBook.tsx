@@ -24,17 +24,13 @@ function RichTitle({ text }: { text: string }) {
   );
 }
 
-/**
- * Phone version of the open book: one page at a time (photo on top, text
- * below) with horizontal swipe. Fully controlled by the same spread index the
- * desktop book uses, so header navigation keeps working.
- */
+// Mobilde yatay kaydırılabilir galeri kartları
 export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProps) {
   const total = BOOK_SPREADS.length;
   const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(currentSpread);
-  const lockUntil = useRef(0); // ignore scroll events caused by our own scrollTo
-  const userAt = useRef(0); // last time the user dragged
+  const lockUntil = useRef(0);
+  const userAt = useRef(0);
   const raf = useRef(0);
 
   const goTo = useCallback((i: number) => {
@@ -60,11 +56,11 @@ export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProp
     });
   };
 
-  // Header navigation / external changes → scroll to the page
+  // Sayfa değişince ilgili slayta kaydır
   useEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    if (performance.now() - userAt.current < 300) return; // change came from the user's own swipe
+    if (performance.now() - userAt.current < 300) return;
     const visible = Math.round(el.scrollLeft / el.clientWidth);
     if (visible !== currentSpread) goTo(currentSpread);
   }, [currentSpread, goTo]);
@@ -140,7 +136,7 @@ export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProp
         ))}
       </div>
 
-      {/* Controls */}
+      {/* Sayfa geçiş butonları */}
       <div className="mt-3 flex items-center justify-center gap-4 px-4">
         <button
           type="button"

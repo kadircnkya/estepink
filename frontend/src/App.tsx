@@ -23,14 +23,14 @@ import { SectionDots } from './components/mobile/SectionDots';
 import { useIsMobile } from './hooks/useIsMobile';
 import Scene from './three/Scene';
 
-/** Stable motion store created once per app lifetime. */
+// Hareket ve scroll durumu store'u
 const motionStore = createMotion();
 
 export default function App() {
   const { coarse, reduced, dark } = useMediaFlags();
   const isMobile = useIsMobile();
 
-  // Read bg from CSS so the Three.js clear colour always matches
+  // Arka plan rengi
   const [bg, setBg] = useState(() =>
     typeof window !== 'undefined' ? readCssBg() : '#fbeef1',
   );
@@ -38,27 +38,27 @@ export default function App() {
     setBg(readCssBg());
   }, [dark]);
 
-  // Loader state — true when textures loaded
+  // Sayfa yüklenme durumu
   const [ready, setReady] = useState(false);
   const handleReady = useCallback(() => setReady(true), []);
 
-  // WebGL context lost fallback
+  // WebGL context kontrolü
   const [contextLost, setContextLost] = useState(false);
   const handleContextLost = useCallback(() => setContextLost(true), []);
 
-  // Video modal state
+  // Tanıtım videosu modalı
   const [videoOpen, setVideoOpen] = useState(false);
   const playBtnRef = useRef<HTMLButtonElement>(null);
   const openVideo = useCallback(() => setVideoOpen(true), []);
   const closeVideo = useCallback(() => setVideoOpen(false), []);
 
-  // Global pointer tracking
+  // Fare / dokunmatik takibi
   usePointer(motionStore);
 
-  // Active book spread state (0 to 8)
+  // Aktif defter sayfası
   const [bookSpread, setBookSpread] = useState(0);
 
-  // Service pre-selected from the Services section (nonce re-triggers same title)
+  // Hizmetlerden seçilen paket
   const [presetService, setPresetService] = useState<{ title: string; nonce: number } | null>(null);
 
   const scrollToId = useCallback((id: string) => {
@@ -73,7 +73,7 @@ export default function App() {
     [scrollToId],
   );
 
-  // Header navigation mapping
+  // Menü yönlendirmeleri
   const handleNavigate = useCallback(
     (target: NavTarget) => {
       const spreads: Partial<Record<NavTarget, number>> = { salon: 0, odalar: 4, cihazlar: 6, randevu: 8 };
@@ -91,7 +91,6 @@ export default function App() {
 
   return (
     <MotionContext.Provider value={motionStore}>
-      {/* Skip link */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-pink focus:px-4 focus:py-2 focus:text-white"
@@ -99,10 +98,10 @@ export default function App() {
         İçeriğe geç
       </a>
 
-      {/* Loader overlay */}
+      {/* Yükleme ekranı */}
       <Loader done={ready} />
 
-      {/* Fixed 3-D WebGL canvas behind the content */}
+      {/* 3D WebGL arka planı */}
       {!contextLost && (
         <Scene
           coarse={coarse}
@@ -113,7 +112,7 @@ export default function App() {
         />
       )}
 
-      {/* Fallback background if WebGL context is lost */}
+      {/* WebGL çalışmazsa yedek arka plan */}
       {contextLost && (
         <div
           aria-hidden="true"
@@ -122,52 +121,45 @@ export default function App() {
         />
       )}
 
-      {/* Plum ambience that fades in as the hero fades out */}
       <NightBackdrop />
 
-      {/* Fixed UI Header and Progress bar */}
+      {/* Üst menü ve ilerleme çubuğu */}
       <Header onNavigate={handleNavigate} />
       <ProgressBar />
 
-      {/* Natural page flow container */}
       <main id="main-content" className="relative z-[2] w-full min-h-screen pt-0 md:pt-20">
-        {/* 1. Hero Section (Includes 'Tanıtım videosunu izle' button which opens VideoModal) */}
+        {/* Giriş bölümü */}
         <HeroSection onPlayVideo={openVideo} />
 
-        {/* Everything after the hero lives on the plum "night" backdrop */}
         <div className="theme-night">
           {isMobile ? (
             <>
-              {/* Phone: one full-screen section per step, snap-scrolled */}
+              {/* Mobil görünüm: tam ekran kaydırmalı bölümler */}
               <MobileBook currentSpread={bookSpread} onSpreadChange={setBookSpread} />
               <MobileServices onRequest={handleServiceRequest} />
               <MobileContact presetService={presetService} />
             </>
           ) : (
             <>
-              {/* 2. Interactive 3D Book Gallery Section */}
+              {/* Masaüstü görünüm */}
               <Book
                 currentSpread={bookSpread}
                 onSpreadChange={setBookSpread}
                 reducedMotion={reduced}
               />
-
-              {/* 3. Services */}
               <Services onRequest={handleServiceRequest} />
-
-              {/* 4. Contact form + map */}
               <Contact presetService={presetService} />
             </>
           )}
 
-          {/* 5. Footer */}
           <Footer />
         </div>
       </main>
 
-      {/* Fixed floating WhatsApp button (bottom-right) */}
+      {/* WhatsApp ve Instagram butonları */}
       <WhatsAppButton />
 
+      {/* Mobilde sabit buton ve sayfa göstergesi */}
       {isMobile && (
         <>
           <SectionDots />
@@ -175,7 +167,7 @@ export default function App() {
         </>
       )}
 
-      {/* Video modal */}
+      {/* Video penceresi */}
       <VideoModal
         open={videoOpen}
         onClose={closeVideo}

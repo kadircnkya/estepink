@@ -20,7 +20,7 @@ interface PetalsProps {
   reduced: boolean;
 }
 
-/** Pink petals drifting gently in 3D space */
+// 3D süzülen taç yapraklar
 export function Petals({ coarse, reduced }: PetalsProps) {
   const m = useMotion();
   const points = useRef<Points>(null);
@@ -72,14 +72,14 @@ export function Petals({ coarse, reduced }: PetalsProps) {
     const now = performance.now();
     const ip = introProgress(m.introStart, now, reduced);
 
-    // Visible half-size of z = PETALS.z plane
+    // Görünür alan sınırları
     const h = 2 * Math.abs(PETALS.z) * Math.tan(MathUtils.degToRad(cam.fov / 2));
     uniforms.uHalf.value.set((h * (size.width / size.height)) / 2, h / 2);
 
     const scrollY = typeof window !== 'undefined' ? window.scrollY : 0;
     const fadeOutThreshold = typeof window !== 'undefined' ? window.innerHeight * 0.75 : 600;
     const heroFade = Math.max(0, 1 - scrollY / Math.max(1, fadeOutThreshold));
-    // Petals keep drifting over the plum backdrop in every section below the hero
+    // Yaprakların yumuşak görünürlük oranı
     const o = (0.55 + 0.45 * heroFade) * smoothstep(0.4, 1, ip);
 
     uniforms.uT.value = now / 1000;

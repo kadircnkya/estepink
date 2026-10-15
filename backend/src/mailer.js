@@ -10,7 +10,7 @@ const {
   MAIL_FROM = 'Estepink Web Sitesi <no-reply@estepink-ornek.com>',
 } = process.env;
 
-/** Without SMTP credentials we run in dev mode: mails are logged, not sent. */
+// SMTP ayarlanmadıysa terminale log atılır
 export const isDevMode = !SMTP_HOST || !SMTP_USER || !SMTP_PASS;
 
 const transporter = isDevMode
@@ -46,7 +46,6 @@ function row(label, value) {
     </tr>`;
 }
 
-/** @param {{name:string, phone:string, email:string, service:string, message:string}} data */
 export async function sendContactMail(data) {
   const date = new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' });
 

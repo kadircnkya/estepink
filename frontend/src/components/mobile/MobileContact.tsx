@@ -12,7 +12,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
 const STEPS = ['Hizmet', 'Bilgiler', 'Mesaj'] as const;
 const STEP_KEYS: (keyof ContactForm)[][] = [['service'], ['name', 'phone', 'email'], ['message', 'consent']];
 
-/** Phone version: 3-step appointment form that fits one screen. */
+// Mobil için tek ekrana sığdırılmış 3 adımlı randevu formu
 export function MobileContact({ presetService }: MobileContactProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [step, setStep] = useState(0);
@@ -21,7 +21,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
   const [status, setStatus] = useState<Status>('idle');
   const [serverError, setServerError] = useState('');
 
-  // Service picked in the services section → jump straight to "Bilgiler"
+  // Hizmetlerden tıklandıysa doğrudan bilgileri doldurma adımına geç
   useEffect(() => {
     if (!presetService) return;
     setForm((f) => ({ ...f, service: presetService.title }));
@@ -38,7 +38,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
   const focusField = (key: keyof ContactForm) =>
     formRef.current?.querySelector<HTMLElement>(`[name="${key}"]`)?.focus();
 
-  /** Validates only the current step; returns true when OK. */
+  // Adım doğrulaması
   const checkStep = (s: number): boolean => {
     const v = validate(form);
     const bad = STEP_KEYS[s]!.filter((k) => v[k]);
@@ -135,7 +135,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
           </div>
         ) : (
           <form ref={formRef} noValidate onSubmit={onSubmit}>
-            {/* Stepper */}
+            {/* Adımlar */}
             <ol className="m-0 mb-4 flex list-none gap-2 p-0" aria-label="Adımlar">
               {STEPS.map((label, i) => (
                 <li key={label} className="flex-1" aria-current={i === step ? 'step' : undefined}>
@@ -157,7 +157,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
               ))}
             </ol>
 
-            {/* Step 1 — service */}
+            {/* 1. Adım: Hizmet seçimi */}
             {step === 0 && (
               <fieldset className="m-0 border-0 p-0">
                 <legend className="field-label">İlgilendiğiniz hizmet</legend>
@@ -187,7 +187,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
               </fieldset>
             )}
 
-            {/* Step 2 — contact info */}
+            {/* 2. Adım: İletişim bilgileri */}
             {step === 1 && (
               <div className="flex flex-col gap-3">
                 <div>
@@ -240,7 +240,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
               </div>
             )}
 
-            {/* Step 3 — message + consent */}
+            {/* 3. Adım: Mesaj ve onay */}
             {step === 2 && (
               <div className="flex flex-col gap-3">
                 <div>
@@ -275,7 +275,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
                   </label>
                   {err('consent')}
                 </div>
-                {/* Honeypot */}
+                {/* Bot koruması */}
                 <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
                   <input type="text" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => set('website', e.target.value)} />
                 </div>
@@ -287,7 +287,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
               </div>
             )}
 
-            {/* Nav buttons */}
+            {/* Butonlar */}
             <div className="mt-4 flex gap-3">
               {step > 0 && (
                 <button
@@ -308,7 +308,7 @@ export function MobileContact({ presetService }: MobileContactProps) {
         )}
       </div>
 
-      {/* Quick contact */}
+      {/* Hızlı arama ve yol tarifi */}
       <div className="mt-3 grid grid-cols-2 gap-3">
         <a href={`tel:${CONTACT.phoneHref}`} className="btn-ghost justify-center no-underline">
           Ara

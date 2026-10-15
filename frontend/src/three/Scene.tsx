@@ -25,7 +25,7 @@ interface SceneProps extends SceneFlags {
   onContextLost: () => void;
 }
 
-/** Fixed, aria-hidden WebGL layer behind the content. */
+// Arka plan 3D WebGL katmanı
 export default function Scene({ coarse, reduced, bg, onReady, onContextLost }: SceneProps) {
   const vp = useStableViewport(coarse);
   const lostRef = useRef(onContextLost);
@@ -42,7 +42,7 @@ export default function Scene({ coarse, reduced, bg, onReady, onContextLost }: S
         frameloop="demand"
         dpr={[1, coarse ? CAMERA.dprMaxCoarse : CAMERA.dprMax]}
         gl={{
-          // The hero is a textured plane and soft petals: MSAA is wasted fill-rate on phones.
+          // Mobilde antialias kapatılarak performans artırılır
           antialias: !coarse,
           alpha: false,
           stencil: false,
@@ -59,7 +59,7 @@ export default function Scene({ coarse, reduced, bg, onReady, onContextLost }: S
           gl.domElement.addEventListener(
             'webglcontextlost',
             (e) => {
-              e.preventDefault();
+               e.preventDefault();
               lostRef.current();
             },
             { once: true },
@@ -77,7 +77,7 @@ export default function Scene({ coarse, reduced, bg, onReady, onContextLost }: S
   );
 }
 
-/** Clear color blends from CSS --bg (hero) to night plum (rest of page). */
+// Sayfa kaydırıldıkça koyulaşan arka plan geçişi
 function SceneSetup({ bg }: { bg: string }) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
@@ -116,10 +116,7 @@ function SceneSetup({ bg }: { bg: string }) {
   return null;
 }
 
-/**
- * Drives the demand frameloop at a capped rate. Pauses entirely while the
- * tab is hidden so background tabs burn no GPU/battery.
- */
+// Sekme arka plandayken veya mobilde FPS tasarrufu
 function FrameTicker({ fps }: { fps: number }) {
   const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {

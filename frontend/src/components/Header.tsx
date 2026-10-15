@@ -9,7 +9,7 @@ interface HeaderProps {
   onNavigate?: (target: NavTarget) => void;
 }
 
-/** True once the hero has (mostly) faded and the plum backdrop is showing. */
+// Hero geçildikten sonra header koyu temaya geçişi
 function useNightHeader(): boolean {
   const [night, setNight] = useState(false);
   useEffect(() => {
@@ -38,7 +38,7 @@ export function Header({ onNavigate }: HeaderProps) {
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const night = useNightHeader();
 
-  // Phones: lock page scroll while the full-screen menu is open, Esc closes it
+  // Menü açıkken sayfa kaydırmasını kilitle
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('menu-open', menuOpen);
@@ -72,9 +72,7 @@ export function Header({ onNavigate }: HeaderProps) {
 
   return (
     <>
-      {/* ── Sabit üst vignette: hero fotoğraf renginden bağımsız okunabilirlik ──
-           Karanlıktan şeffafa degrade — sadece hero üzerindeyken görünür,
-           night moda geçince opacity 0 olur. */}
+      {/* Sabit üst vignette: hero fotoğraf renginden bağımsız okunabilirlik */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed left-0 right-0 top-0 z-[9] transition-opacity duration-500"
@@ -86,7 +84,7 @@ export function Header({ onNavigate }: HeaderProps) {
         }}
       />
 
-      {/* ── Frosted glass şerit: scroll sonrası plum tonu ── */}
+      {/* Buzlu cam efekti */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed left-0 right-0 top-0 z-[10] h-[72px] transition-[background,border-color] duration-500"
@@ -109,7 +107,7 @@ export function Header({ onNavigate }: HeaderProps) {
           night ? 'theme-night' : '',
         ].join(' ')}
       >
-        {/* Logo: tam beyaz — her arka planda okunur */}
+        {/* Logo */}
         <a
           href="#"
           aria-label={UI.homeLabel}
@@ -127,7 +125,7 @@ export function Header({ onNavigate }: HeaderProps) {
           />
         </a>
 
-        {/* Desktop nav */}
+        {/* Masaüstü menü */}
         <nav aria-label={UI.navLabel} className="hidden items-center gap-1.5 lg:flex">
           {NAV.map(({ target, label }) => (
             <button
@@ -138,9 +136,7 @@ export function Header({ onNavigate }: HeaderProps) {
                 'font-sans text-[14px] font-semibold tracking-wide',
                 'transition-all duration-200 active:scale-95',
                 night
-                  // plum arka plan: beyaz border + beyaz yazı + hover'da dolu
                   ? 'border border-white/30 bg-white/[0.10] text-white hover:border-white/60 hover:bg-white/[0.22] hover:text-white'
-                  // hero fotoğraf: vignette var — belirgin beyaz border + güçlü backdrop
                   : 'border border-white/50 bg-white/[0.18] text-white backdrop-blur-md hover:border-white hover:bg-white/[0.30] hover:text-white',
               ].join(' ')}
             >
@@ -166,7 +162,7 @@ export function Header({ onNavigate }: HeaderProps) {
           </div>
         </nav>
 
-        {/* Mobile hamburger */}
+        {/* Mobil menü butonu */}
         <button
           id="menu-toggle"
           aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
@@ -207,7 +203,7 @@ export function Header({ onNavigate }: HeaderProps) {
           />
         </button>
 
-        {/* Mobile menu: full-screen overlay (phones) */}
+        {/* Mobil tam ekran menü */}
         <div
           id="mobile-menu-overlay"
           role="dialog"
@@ -256,7 +252,7 @@ export function Header({ onNavigate }: HeaderProps) {
           </div>
         </div>
 
-        {/* Tablet menu drawer (md–lg) */}
+        {/* Tablet menüsü */}
         <div
           id="mobile-menu"
           role="dialog"

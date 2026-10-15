@@ -1,5 +1,4 @@
-/** Contact form model, client-side validation and API call. */
-
+// İletişim formu veri tipi ve doğrulama
 export interface ContactForm {
   name: string;
   phone: string;
@@ -7,8 +6,7 @@ export interface ContactForm {
   service: string;
   message: string;
   consent: boolean;
-  /** Honeypot — must stay empty */
-  website: string;
+  website: string; // bot koruması
 }
 
 export type ContactErrors = Partial<Record<keyof ContactForm, string>>;
@@ -25,7 +23,7 @@ export const EMPTY_FORM: ContactForm = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/** Mirrors backend/src/utils/validate.js */
+// Form alanları kontrolü
 export function validate(f: ContactForm): ContactErrors {
   const e: ContactErrors = {};
   if (f.name.trim().length < 2) e.name = 'Adınızı girin.';
