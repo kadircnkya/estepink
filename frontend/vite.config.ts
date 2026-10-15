@@ -2,11 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-/**
- * Injects <link rel="preload"> for the primary (latin) font files so the
- * hero heading renders without a late font swap. Fontsource files are
- * hashed by Vite, so the tags are added after bundling.
- */
+// Yazı tiplerini önceden yükleme eklentisi
 function preloadFonts(): Plugin {
   const wanted = [
     /instrument-serif-latin-400-normal.*\.woff2$/,
@@ -42,6 +38,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2020',
+    chunkSizeWarningLimit: 1600,
     rollupOptions: {
       output: {
         manualChunks(id: string) {
