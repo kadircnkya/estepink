@@ -1,0 +1,443 @@
+@import 'tailwindcss';
+
+/* Self-hosted fonts (latin + latin-ext for Turkish glyphs ş ğ ı İ) */
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-ext-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import '@fontsource/instrument-serif/latin-ext-400-italic.css';
+@import '@fontsource/dm-sans/latin-400.css';
+@import '@fontsource/dm-sans/latin-ext-400.css';
+@import '@fontsource/dm-sans/latin-500.css';
+@import '@fontsource/dm-sans/latin-ext-500.css';
+
+/* ---------- Runtime theme variables (light / dark) ---------- */
+:root {
+  --bg: #fbeef1;
+  --ink: #2b1020;
+  --pink: #e8246f;
+  /* Slightly deeper pink for filled buttons with white text (WCAG AA 4.5:1) */
+  --pink-fill: #d81b60;
+  --muted: #7a5566;
+  --card: rgba(251, 238, 241, 0.82);
+  --paper: #fffaf5;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #1c0c16;
+    --ink: #fbe9ef;
+    --muted: #c9a3b4;
+    --card: rgba(28, 12, 22, 0.78);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #1c0c16;
+  --ink: #fbe9ef;
+  --muted: #c9a3b4;
+  --card: rgba(28, 12, 22, 0.78);
+  color-scheme: dark;
+}
+
+/*
+ * Night scope: everything below the hero sits on the deep plum backdrop
+ * (same tone the hero fades into), independent of the OS theme.
+ */
+.theme-night {
+  --bg: #1c0c16;
+  --ink: #f7e8ee;
+  --muted: #c4a2b2;
+  /* lighter rose for text accents on plum (AA contrast) */
+  --pink: #f25c95;
+  --pink-fill: #e53580;
+  --card: rgba(255, 255, 255, 0.035);
+  --line: rgba(247, 232, 238, 0.12);
+  --line-strong: rgba(247, 232, 238, 0.22);
+  color: var(--ink);
+  /* Let the WebGL canvas show through */
+  background: transparent;
+  color-scheme: dark;
+}
+
+/* Paper scope: book pages always print dark ink on cream paper. */
+.theme-paper {
+  --ink: #2b1020;
+  --pink: #e8246f;
+  --pink-fill: #d81b60;
+  --muted: #7a5566;
+  /* Always cream regardless of surrounding night theme */
+  background: #fffaf5;
+  color-scheme: light;
+}
+
+/* ---------- Tailwind design tokens ---------- */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-pink: var(--pink);
+  --color-pink-fill: var(--pink-fill);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-paper: var(--paper);
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+}
+@theme {
+  --breakpoint-wide: 45.0625rem;
+  --animate-pulse-ring: pulse-ring 2s ease-out infinite;
+  @keyframes pulse-ring {
+    from {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    to {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+}
+
+/* Short landscape phones (height ≤ 520px) */
+@custom-variant short-landscape (@media (max-height: 520px) and (orientation: landscape));
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 96px;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 16px/1.6 var(--font-sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 3px;
+  }
+  h1 i,
+  h2 i {
+    color: var(--pink);
+  }
+}
+
+/* ---------- Components ---------- */
+@layer components {
+  /* Glass card: blur needs the -webkit- prefix for iOS Safari */
+  .glass {
+    background: var(--card);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .glass-sm {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .play-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 2px solid var(--pink);
+    animation: var(--animate-pulse-ring);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .play-ring::after {
+      animation: none;
+    }
+  }
+
+  /* ---------- Editorial section primitives ---------- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font: 500 11px/1 var(--font-sans);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .section-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 60px);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .hairline {
+    border-color: var(--line, rgba(43, 16, 32, 0.12));
+  }
+  .footer-link {
+    color: var(--ink);
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition:
+      background-size 0.35s ease,
+      color 0.2s ease;
+  }
+  .footer-link:hover {
+    color: var(--pink);
+    background-size: 100% 1px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 9999px;
+    background: var(--pink-fill);
+    color: #fff;
+    padding: 0.95rem 1.75rem;
+    font: 500 14px/1 var(--font-sans);
+    letter-spacing: 0.02em;
+    transition:
+      background-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+    box-shadow: 0 10px 30px -12px rgba(216, 27, 96, 0.6);
+  }
+  .btn-primary:hover {
+    background: #c2185b;
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: progress;
+    transform: none;
+  }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--line-strong, rgba(43, 16, 32, 0.2));
+    padding: 0.85rem 1.4rem;
+    font: 500 14px/1 var(--font-sans);
+    color: var(--ink);
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--pink);
+    background: rgba(242, 92, 149, 0.08);
+  }
+
+  /* ---------- Form fields ---------- */
+  .field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font: 500 12px/1 var(--font-sans);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--line, rgba(43, 16, 32, 0.14));
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.9rem 1rem;
+    font: 400 15px/1.4 var(--font-sans);
+    color: var(--ink);
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+    appearance: none;
+  }
+  .field::placeholder {
+    color: color-mix(in srgb, var(--muted) 60%, transparent);
+  }
+  .field:hover {
+    border-color: var(--line-strong, rgba(43, 16, 32, 0.24));
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--pink);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 4px rgba(242, 92, 149, 0.12);
+  }
+  .field[aria-invalid='true'] {
+    border-color: #ff7a9c;
+  }
+  select.field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23c4a2b2' stroke-width='1.5'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+  select.field option {
+    background: #1c0c16;
+    color: #f7e8ee;
+  }
+  .field-error {
+    margin-top: 0.4rem;
+    font: 400 12.5px/1.3 var(--font-sans);
+    color: #ff8fab;
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+/* 3D Transform Utilities for Cross-Browser compatibility (Safari / Webkit) */
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ---------- Mobile / touch performance ---------- */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sheet-up {
+  animation: sheet-up 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.sheet-fade {
+  animation: sheet-fade 0.25s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-up,
+  .sheet-fade {
+    animation: none;
+  }
+}
+
+/* Phones (< md): one full-screen section per "step", snap-scrolled */
+@media (max-width: 767.98px) {
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 0;
+    overscroll-behavior-y: none;
+  }
+  /* never fight the on-screen keyboard while typing */
+  html:has(input:focus, textarea:focus, select:focus) {
+    scroll-snap-type: none;
+  }
+  .snap-section {
+    scroll-snap-align: start;
+  }
+  .snap-end-section {
+    scroll-snap-align: end;
+  }
+  /* Floating UI hides behind the full-screen menu */
+  html.menu-open .mobile-float {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .mobile-float {
+    transition-property: bottom, opacity, transform;
+  }
+}
+
+/* Touch: replace hover feedback with press feedback */
+@media (hover: none) {
+  .btn-primary:hover {
+    transform: none;
+    background: var(--pink-fill);
+  }
+  .btn-primary:active,
+  .btn-ghost:active {
+    transform: scale(0.97);
+  }
+  .btn-ghost:hover {
+    background: transparent;
+    border-color: var(--line-strong, rgba(43, 16, 32, 0.2));
+  }
+  .btn-ghost:active {
+    border-color: var(--pink);
+    background: rgba(242, 92, 149, 0.08);
+  }
+}
+
+@media (max-width: 640px) {
+  .field {
+    font-size: 16px;
+    padding: 1rem;
+  }
+  .btn-primary,
+  .btn-ghost {
+    min-height: 48px;
+    justify-content: center;
+  }
+  .footer-link {
+    display: inline-block;
+    padding: 0.35rem 0;
+  }
+}
+@media (pointer: coarse) {
+  .glass,
+  .glass-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  /* No hover-zoom on touch (it sticks after tap and re-rasterises the page) */
+  .group:hover img {
+    transform: none;
+  }
+}
