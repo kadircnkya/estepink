@@ -6,7 +6,7 @@ Profesyonel monorepo yapısı ile frontend ve backend ayrımı.
 
 ```
 este/
-├── frontend/          # React + Vite + Tailwind CSS v4
+├── frontend/       
 │   ├── src/
 │   │   ├── components/
 │   │   ├── hooks/
@@ -14,12 +14,12 @@ este/
 │   ├── public/
 │   └── package.json
 │
-├── backend/           # (İlerde eklenecek) API Servisleri
+├── backend/         
 │   ├── src/
 │   ├── config/
 │   └── README.md
 │
-└── README.md          # Bu dosya
+└── README.md         
 ```
 
 ## Başlangıç
