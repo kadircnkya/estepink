@@ -1,7 +1,7 @@
 // WhatsApp Entegrasyon Yapılandırması ve Yardımcı Fonksiyonlar
 
 // Telefon numarası: başında + ve boşluk olmadan, ülke kodlu (Türkiye için 90)
-export const WHATSAPP_NUMBER = '905559919588';
+export const WHATSAPP_NUMBER = '905314812526';
 
 // Varsayılan genel iletişim mesajı
 export const DEFAULT_MESSAGE = 'Merhaba, bilgi almak istiyorum.';

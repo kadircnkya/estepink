@@ -3,7 +3,7 @@ import { buildWhatsAppUrl, WHATSAPP_NUMBER } from '../config/whatsapp';
 // Estepink iletişim ve adres bilgileri
 export const CONTACT = {
   email: 'estepink.01@gmail.com',
-  phoneDisplay: '0555 991 95 88',
+  phoneDisplay: '0531 481 25 26',
   phoneHref: `+${WHATSAPP_NUMBER}`,
   address: {
     line1: 'İsmetpaşa, 49. Sk. No:1',

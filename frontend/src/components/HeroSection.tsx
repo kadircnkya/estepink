@@ -55,7 +55,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
         </h1>
 
         {/* Açıklama */}
-        <p className="font-sans text-[15px] sm:text-[16px] md:text-[17px] leading-relaxed text-[#7a5566] max-w-[48ch] mb-6">
+        <p className="font-sans text-[15px] sm:text-[16px] md:text-[17px] leading-relaxed text-white drop-shadow-[0_1px_6px_rgba(43,16,32,0.35)] max-w-[48ch] mb-6">
           {HERO_COPY.body}
         </p>
 

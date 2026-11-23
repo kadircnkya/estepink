@@ -43,7 +43,7 @@ export const SERVICE_CATEGORIES: readonly ServiceCategory[] = [
     title: 'Kalıcı Makyaj',
     groups: [
       { label: 'Kaş', items: ['Microblading', 'Kıl Tekniği Kaş', 'Pudralama Kaş'] },
-      { label: 'Göz', items: ['Dipliner', 'Ayliner'] },
+      { label: 'Göz', items: ['Dipliner', 'Eyeliner'] },
       { label: 'Dudak', items: ['Dudak Renklendirme', 'Dudak Çerçeve'] },
     ],
   },
