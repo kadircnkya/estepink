@@ -1,62 +1,78 @@
-// İletişim formu veri tipi ve doğrulama
-export interface ContactForm {
-  name: string;
-  phone: string;
-  email: string;
-  service: string;
-  message: string;
-  consent: boolean;
-  website: string; // bot koruması
-}
+// Randevu Formu veri tipleri, doğrulama ve yardımcıları
+import {
+  buildWhatsAppUrl,
+  buildAppointmentMessage,
+  formatDateTR,
+  formatPhoneNumber,
+  getTodayDateString,
+  isValidTurkishPhone,
+  type AppointmentFormData,
+  type AppointmentErrors,
+  EMPTY_APPOINTMENT_FORM,
+} from '../config/whatsapp';
 
-export type ContactErrors = Partial<Record<keyof ContactForm, string>>;
-
-export const EMPTY_FORM: ContactForm = {
-  name: '',
-  phone: '',
-  email: '',
-  service: '',
-  message: '',
-  consent: false,
-  website: '',
+export type { AppointmentFormData, AppointmentErrors };
+export {
+  buildWhatsAppUrl,
+  buildAppointmentMessage,
+  formatDateTR,
+  formatPhoneNumber,
+  getTodayDateString,
+  isValidTurkishPhone,
+  EMPTY_APPOINTMENT_FORM,
 };
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+import { SERVICE_CATEGORIES } from '../content/serviceCategories';
 
-// Form alanları kontrolü
-export function validate(f: ContactForm): ContactErrors {
-  const e: ContactErrors = {};
-  if (f.name.trim().length < 2) e.name = 'Adınızı girin.';
-  const digits = f.phone.replace(/\D/g, '');
-  if (digits.length < 10 || digits.length > 15) e.phone = 'Geçerli bir telefon numarası girin.';
-  if (!EMAIL_RE.test(f.email.trim())) e.email = 'Geçerli bir e-posta adresi girin.';
-  if (!f.service.trim()) e.service = 'Lütfen bir hizmet seçin.';
-  if (f.message.trim().length < 10) e.message = 'Mesajınız en az 10 karakter olmalı.';
-  if (!f.consent) e.consent = 'Devam etmek için onay vermeniz gerekiyor.';
-  return e;
+export interface AppointmentServiceGroup {
+  category: string;
+  items: readonly string[];
 }
 
-const API_BASE: string = import.meta.env.VITE_API_URL ?? '';
+// Hizmetler bölümüyle birebir aynı kategori ve hizmet listesi
+export const APPOINTMENT_SERVICE_GROUPS: readonly AppointmentServiceGroup[] = SERVICE_CATEGORIES.map((cat) => ({
+  category: cat.title,
+  items: cat.items ? cat.items : (cat.groups?.flatMap((g) => g.items) ?? []),
+}));
 
-export async function submitContact(
-  f: ContactForm,
-): Promise<{ ok: true } | { ok: false; error: string; fields?: ContactErrors }> {
-  try {
-    const res = await fetch(`${API_BASE}/api/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(f),
-    });
-    const json = (await res.json().catch(() => null)) as
-      | { ok: boolean; error?: string; fields?: ContactErrors }
-      | null;
-    if (res.ok && json?.ok) return { ok: true };
-    return {
-      ok: false,
-      error: json?.error ?? 'Mesajınız iletilemedi. Lütfen tekrar deneyin.',
-      fields: json?.fields,
-    };
-  } catch {
-    return { ok: false, error: 'Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.' };
+/**
+ * Randevu formu alan kontrolü (zorunlu alanlar, telefon formatı, geçmiş tarih)
+ */
+export function validateAppointment(f: AppointmentFormData): AppointmentErrors {
+  const errors: AppointmentErrors = {};
+
+  // Ad Soyad kontrolü
+  if (!f.fullName || f.fullName.trim().length === 0) {
+    errors.fullName = 'Lütfen adınızı ve soyadınızı girin.';
+  } else if (f.fullName.trim().length < 2) {
+    errors.fullName = 'Ad ve soyad en az 2 karakter olmalıdır.';
   }
+
+  // Telefon kontrolü (05XX XXX XX XX)
+  const digits = f.phone.replace(/\D/g, '');
+  if (!digits) {
+    errors.phone = 'Lütfen telefon numaranızı girin.';
+  } else if (!isValidTurkishPhone(f.phone)) {
+    errors.phone = 'Geçerli bir telefon numarası girin (Örn: 05XX XXX XX XX).';
+  }
+
+  // Hizmet seçimi kontrolü
+  if (!f.service || f.service.trim().length === 0) {
+    errors.service = 'Lütfen bir hizmet seçin.';
+  }
+
+  // Tarih kontrolü (geçmiş tarih seçilemez)
+  const today = getTodayDateString();
+  if (!f.date || f.date.trim().length === 0) {
+    errors.date = 'Lütfen randevu tarihi seçin.';
+  } else if (f.date < today) {
+    errors.date = 'Geçmiş bir tarih seçemezsiniz.';
+  }
+
+  // Saat kontrolü
+  if (!f.time || f.time.trim().length === 0) {
+    errors.time = 'Lütfen tercih edilen saati seçin.';
+  }
+
+  return errors;
 }

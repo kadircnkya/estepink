@@ -150,6 +150,7 @@ export function Header({ onNavigate }: HeaderProps) {
               href={LINKS.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="WhatsApp üzerinden randevu alın"
               className={[
                 'inline-block rounded-full bg-pink-fill px-5 py-2.5',
                 'font-sans text-sm font-semibold text-white no-underline',
@@ -282,6 +283,7 @@ export function Header({ onNavigate }: HeaderProps) {
               href={LINKS.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="WhatsApp üzerinden randevu alın"
               onClick={closeMenu}
               className="block rounded-full bg-pink-fill px-5 py-3 text-center font-sans text-sm font-semibold text-white no-underline shadow-[0_2px_8px_rgba(216,27,96,0.3)]"
             >

@@ -54,6 +54,7 @@ export const TextPage: React.FC<TextPageProps> = ({ spread }) => {
               href={LINKS.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="WhatsApp üzerinden randevu talebi oluşturun"
               className={[
                 'inline-flex items-center justify-center gap-1.5 rounded-full bg-pink',
                 'px-3 py-1.5 sm:px-5 sm:py-2.5 md:px-6 md:py-3',

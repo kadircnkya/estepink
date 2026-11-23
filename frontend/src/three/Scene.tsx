@@ -125,7 +125,9 @@ function FrameTicker({ fps }: { fps: number }) {
     let last = 0;
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
-      if (now - last < interval) return;
+      // Hero geçildikten sonra sahne sakin: kare hızını yarıya indir
+      const step = nightProgress() > 0.98 ? Math.max(interval, 1000 / 30 - 2) : interval;
+      if (now - last < step) return;
       last = now;
       invalidate();
     };

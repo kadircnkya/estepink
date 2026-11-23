@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, lazy, Suspense } from 'react';
 import { MotionContext, createMotion } from './lib/motion';
 import { useMediaFlags, readCssBg } from './hooks/useMediaFlags';
 import { usePointer } from './hooks/usePointer';
@@ -10,18 +10,24 @@ import { Book } from './components/Book/Book';
 import { Footer } from './components/Footer';
 import { ProgressBar } from './components/ProgressBar';
 import { Loader } from './components/Loader';
-import { VideoModal } from './components/VideoModal';
 import { NightBackdrop } from './components/NightBackdrop';
-import { Services } from './components/Services';
+import { ServiceCategories } from './components/ServiceCategories';
 import { Contact } from './components/Contact';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { MobileBook } from './components/mobile/MobileBook';
-import { MobileServices } from './components/mobile/MobileServices';
 import { MobileContact } from './components/mobile/MobileContact';
 import { StickyCta } from './components/mobile/StickyCta';
 import { SectionDots } from './components/mobile/SectionDots';
 import { useIsMobile } from './hooks/useIsMobile';
-import Scene from './three/Scene';
+
+// Ağır parçalar (three.js sahnesi, video penceresi) ihtiyaç anında yüklenir
+const Scene = lazy(() => import('./three/Scene'));
+const VideoModal = lazy(() => import('./components/VideoModal').then((m) => ({ default: m.VideoModal })));
+
+// Veri tasarrufu açıksa ağır 3D sahne yüklenmez
+const SAVE_DATA =
+  typeof navigator !== 'undefined' &&
+  !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
 
 // Hareket ve scroll durumu store'u
 const motionStore = createMotion();
@@ -39,8 +45,14 @@ export default function App() {
   }, [dark]);
 
   // Sayfa yüklenme durumu
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(SAVE_DATA);
   const handleReady = useCallback(() => setReady(true), []);
+
+  // 3D sahne geç kalırsa veya yüklenemezse yükleme ekranı takılı kalmasın
+  useEffect(() => {
+    const id = window.setTimeout(() => setReady(true), 4000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   // WebGL context kontrolü
   const [contextLost, setContextLost] = useState(false);
@@ -48,8 +60,12 @@ export default function App() {
 
   // Tanıtım videosu modalı
   const [videoOpen, setVideoOpen] = useState(false);
+  const [videoMounted, setVideoMounted] = useState(false);
   const playBtnRef = useRef<HTMLButtonElement>(null);
-  const openVideo = useCallback(() => setVideoOpen(true), []);
+  const openVideo = useCallback(() => {
+    setVideoMounted(true);
+    setVideoOpen(true);
+  }, []);
   const closeVideo = useCallback(() => setVideoOpen(false), []);
 
   // Fare / dokunmatik takibi
@@ -76,7 +92,7 @@ export default function App() {
   // Menü yönlendirmeleri
   const handleNavigate = useCallback(
     (target: NavTarget) => {
-      const spreads: Partial<Record<NavTarget, number>> = { salon: 0, odalar: 4, cihazlar: 6, randevu: 8 };
+      const spreads: Partial<Record<NavTarget, number>> = { salon: 0, odalar: 3, cihazlar: 5, randevu: 7 };
       if (target === 'video') {
         openVideo();
       } else if (target === 'hizmetler' || target === 'iletisim') {
@@ -102,18 +118,20 @@ export default function App() {
       <Loader done={ready} />
 
       {/* 3D WebGL arka planı */}
-      {!contextLost && (
-        <Scene
-          coarse={coarse}
-          reduced={reduced}
-          bg={bg}
-          onReady={handleReady}
-          onContextLost={handleContextLost}
-        />
+      {!contextLost && !SAVE_DATA && (
+        <Suspense fallback={null}>
+          <Scene
+            coarse={coarse}
+            reduced={reduced}
+            bg={bg}
+            onReady={handleReady}
+            onContextLost={handleContextLost}
+          />
+        </Suspense>
       )}
 
       {/* WebGL çalışmazsa yedek arka plan */}
-      {contextLost && (
+      {(contextLost || SAVE_DATA) && (
         <div
           aria-hidden="true"
           className="pointer-events-none fixed inset-0 z-0"
@@ -136,7 +154,7 @@ export default function App() {
             <>
               {/* Mobil görünüm: tam ekran kaydırmalı bölümler */}
               <MobileBook currentSpread={bookSpread} onSpreadChange={setBookSpread} />
-              <MobileServices onRequest={handleServiceRequest} />
+              <ServiceCategories onRequest={handleServiceRequest} />
               <MobileContact presetService={presetService} />
             </>
           ) : (
@@ -147,7 +165,7 @@ export default function App() {
                 onSpreadChange={setBookSpread}
                 reducedMotion={reduced}
               />
-              <Services onRequest={handleServiceRequest} />
+              <ServiceCategories onRequest={handleServiceRequest} />
               <Contact presetService={presetService} />
             </>
           )}
@@ -167,12 +185,12 @@ export default function App() {
         </>
       )}
 
-      {/* Video penceresi */}
-      <VideoModal
-        open={videoOpen}
-        onClose={closeVideo}
-        triggerRef={playBtnRef}
-      />
+      {/* Video penceresi (ilk açılışta yüklenir) */}
+      {videoMounted && (
+        <Suspense fallback={null}>
+          <VideoModal open={videoOpen} onClose={closeVideo} triggerRef={playBtnRef} />
+        </Suspense>
+      )}
     </MotionContext.Provider>
   );
 }

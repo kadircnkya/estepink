@@ -104,6 +104,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-anchor: none;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
@@ -241,6 +242,38 @@
     border-color: var(--pink);
     background: rgba(242, 92, 149, 0.08);
   }
+  .btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    border-radius: 9999px;
+    background: #25d366;
+    color: #ffffff;
+    padding: 0.95rem 1.85rem;
+    font: 600 14.5px/1 var(--font-sans);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: none;
+    transition:
+      background-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+    box-shadow: 0 8px 25px -6px rgba(37, 211, 102, 0.5);
+  }
+  .btn-whatsapp:hover {
+    background: #20ba59;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -6px rgba(37, 211, 102, 0.65);
+  }
+  .btn-whatsapp:active {
+    transform: translateY(0) scale(0.98);
+  }
+  .btn-whatsapp:disabled {
+    opacity: 0.6;
+    cursor: progress;
+    transform: none;
+  }
 
   /* ---------- Form fields ---------- */
   .field-label {
@@ -290,6 +323,28 @@
     background: #1c0c16;
     color: #f7e8ee;
   }
+  select.field optgroup {
+    background: #1c0c16;
+    color: var(--pink);
+    font-weight: 600;
+  }
+  input[type='date'].field,
+  input[type='time'].field {
+    color-scheme: dark;
+    position: relative;
+    padding-right: 2.75rem;
+  }
+  input[type='date'].field::-webkit-calendar-picker-indicator,
+  input[type='time'].field::-webkit-calendar-picker-indicator {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
   .field-error {
     margin-top: 0.4rem;
     font: 400 12.5px/1.3 var(--font-sans);
@@ -318,6 +373,27 @@
   }
 }
 
+/* ---------- Hizmet kategori kartları ---------- */
+.svc-card {
+  border-radius: 24px;
+  border: 1px solid var(--line, rgba(247, 232, 238, 0.12));
+  background: rgba(255, 255, 255, 0.04);
+}
+.svc-card.is-open {
+  border-color: var(--pink);
+}
+.svc-group + .svc-group {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--line-strong, rgba(247, 232, 238, 0.22));
+}
+.svc-group-label {
+  margin: 0 0 0.6rem;
+  font: 500 11px/1 var(--font-sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
 /* 3D Transform Utilities for Cross-Browser compatibility (Safari / Webkit) */
 .preserve-3d {
   transform-style: preserve-3d;
@@ -365,22 +441,10 @@
   }
 }
 
-/* Phones (< md): one full-screen section per "step", snap-scrolled */
+/* Phones (< md): doğal, akıcı dikey kaydırma */
 @media (max-width: 767.98px) {
   html {
-    scroll-snap-type: y mandatory;
-    scroll-padding-top: 0;
-    overscroll-behavior-y: none;
-  }
-  /* never fight the on-screen keyboard while typing */
-  html:has(input:focus, textarea:focus, select:focus) {
-    scroll-snap-type: none;
-  }
-  .snap-section {
-    scroll-snap-align: start;
-  }
-  .snap-end-section {
-    scroll-snap-align: end;
+    scroll-padding-top: 72px;
   }
   /* Floating UI hides behind the full-screen menu */
   html.menu-open .mobile-float {
@@ -410,6 +474,13 @@
     border-color: var(--pink);
     background: rgba(242, 92, 149, 0.08);
   }
+  .btn-whatsapp:hover {
+    transform: none;
+    background: #25d366;
+  }
+  .btn-whatsapp:active {
+    transform: scale(0.97);
+  }
 }
 
 @media (max-width: 640px) {
@@ -418,7 +489,8 @@
     padding: 1rem;
   }
   .btn-primary,
-  .btn-ghost {
+  .btn-ghost,
+  .btn-whatsapp {
     min-height: 48px;
     justify-content: center;
   }

@@ -23,6 +23,15 @@ export const Book: React.FC<BookProps> = ({
   const [flippingLeaf, setFlippingLeaf] = useState<number | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const flipTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (flipTimerRef.current !== null) {
+        window.clearTimeout(flipTimerRef.current);
+      }
+    };
+  }, []);
 
   // Sayfa değişimi ve ses efekti
   const setSpread = useCallback(
@@ -46,11 +55,13 @@ export const Book: React.FC<BookProps> = ({
         setInternalSpread(clamped);
       }
 
-      const timer = window.setTimeout(() => {
+      if (flipTimerRef.current !== null) {
+        window.clearTimeout(flipTimerRef.current);
+      }
+      flipTimerRef.current = window.setTimeout(() => {
         setFlippingLeaf(null);
+        flipTimerRef.current = null;
       }, 650);
-
-      return () => window.clearTimeout(timer);
     },
     [activeSpread, onSpreadChange, soundEnabled],
   );
@@ -102,8 +113,8 @@ export const Book: React.FC<BookProps> = ({
     else if (dx > 35) handlePrev();
   };
 
-  const totalSpreads = BOOK_SPREADS.length; // 9
-  const leavesCount = totalSpreads - 1; // 8 flipping leaves
+  const totalSpreads = BOOK_SPREADS.length;
+  const leavesCount = totalSpreads - 1; // çevrilen yapraklar
 
   return (
     <section
@@ -170,7 +181,7 @@ export const Book: React.FC<BookProps> = ({
               backgroundColor: '#fffaf5',
             }}
           >
-            <TextPage spread={BOOK_SPREADS[8]!} />
+            <TextPage spread={BOOK_SPREADS[BOOK_SPREADS.length - 1]!} />
           </div>
 
           {/* Çevrilen yapraklar */}
@@ -221,7 +232,6 @@ export const Book: React.FC<BookProps> = ({
           onPrev={handlePrev}
           onNext={handleNext}
           onSelect={setSpread}
-          disabled={flippingLeaf !== null}
           soundEnabled={soundEnabled}
           onToggleSound={() => setSoundEnabled((s) => !s)}
         />

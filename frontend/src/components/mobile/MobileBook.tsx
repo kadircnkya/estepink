@@ -92,7 +92,7 @@ export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProp
             role="group"
             aria-roledescription="slide"
             aria-label={`${i + 1} / ${total}`}
-            className="flex h-full w-full shrink-0 snap-center px-4"
+            className="flex h-full w-full shrink-0 snap-center snap-always px-4"
           >
             <article
               className={[
@@ -105,7 +105,7 @@ export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProp
                 <img
                   src={s.image}
                   alt={s.alt}
-                  loading={i <= 1 ? 'eager' : 'lazy'}
+                  loading={i <= Math.max(1, active + 1) ? 'eager' : 'lazy'}
                   decoding="async"
                   draggable={false}
                   className="h-full w-full object-cover"
@@ -125,6 +125,7 @@ export function MobileBook({ currentSpread = 0, onSpreadChange }: MobileBookProp
                     href={LINKS.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="WhatsApp üzerinden randevu talebi oluşturun"
                     className="mt-1 inline-flex min-h-[46px] items-center justify-center rounded-full bg-pink-fill px-5 font-sans text-[14px] font-semibold text-white no-underline active:scale-95"
                   >
                     WhatsApp ile randevu al

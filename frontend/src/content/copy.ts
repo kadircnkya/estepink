@@ -1,11 +1,8 @@
 import type { NavTarget } from '../lib/config';
-import { CONTACT } from './site';
-
-const WHATSAPP_NUMBER: string = CONTACT.phoneHref.replace(/\D/g, '');
-const WHATSAPP_TEXT = encodeURIComponent('Merhaba, randevu almak istiyorum.');
+import { buildWhatsAppUrl } from '../config/whatsapp';
 
 export const LINKS = {
-  whatsapp: `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`,
+  whatsapp: buildWhatsAppUrl('Merhaba, randevu almak istiyorum.'),
   instagram: 'https://instagram.com/estepinksultangazi',
   instagramHandle: '@estepinksultangazi',
 } as const;
@@ -32,7 +29,7 @@ export const UI = {
 } as const;
 
 export const HERO_COPY = {
-  title: 'Pürüzsüz cilt, *pembe* bir deneyim.',
+  title: 'Pürüzsüz cilt, *profesyonel deneyim.*',
   body: 'Estepink güzellik ve epilasyon merkezi. Şehrin kalbinde, kendinize ayırdığınız en huzurlu ve özenli anlar.',
   tags: ['Lazer Epilasyon', 'Cilt Bakımı', 'Hijyenik Odalar', 'İstanbul'],
   cta: 'Tanıtım videosunu izle',

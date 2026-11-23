@@ -16,7 +16,8 @@ export function SectionDots() {
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
       },
-      { threshold: 0.55 },
+      // Ekranın ortasındaki bölüm aktif sayılır (uzun bölümlerde de çalışır)
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     );
     for (const s of SECTIONS) {
       const el = document.getElementById(s.id);
@@ -37,7 +38,7 @@ export function SectionDots() {
           aria-label={s.label}
           aria-current={active === s.id}
           onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' })}
-          className="grid h-7 w-6 cursor-pointer place-items-center border-0 bg-transparent p-0"
+          className="grid h-11 w-9 cursor-pointer place-items-center border-0 bg-transparent p-0"
         >
           <span
             className={[

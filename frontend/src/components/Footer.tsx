@@ -64,7 +64,13 @@ export const Footer: React.FC = () => {
               </a>
             </li>
             <li>
-              <a href={LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="footer-link">
+              <a
+                href={LINKS.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp üzerinden bizimle iletişime geçin"
+                className="footer-link"
+              >
                 WhatsApp
               </a>
             </li>

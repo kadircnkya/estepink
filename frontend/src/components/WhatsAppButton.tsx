@@ -1,19 +1,16 @@
 import { useMemo } from 'react';
-import { CONTACT } from '../content/site';
 import { LINKS } from '../content/copy';
+import { buildWhatsAppUrl, DEFAULT_MESSAGE } from '../config/whatsapp';
 
 interface WhatsAppButtonProps {
   defaultMessage?: string;
 }
 
 export function WhatsAppButton({
-  defaultMessage = 'Merhaba, Estepink hakkında bilgi ve randevu almak istiyorum.',
+  defaultMessage = DEFAULT_MESSAGE,
 }: WhatsAppButtonProps) {
   const whatsappUrl = useMemo(() => {
-    const rawNumber = CONTACT.phoneHref.replace(/\D/g, '');
-    const cleanNumber = rawNumber.replace(/\D/g, '');
-    const encodedText = encodeURIComponent(defaultMessage);
-    return `https://wa.me/${cleanNumber}?text=${encodedText}`;
+    return buildWhatsAppUrl(defaultMessage);
   }, [defaultMessage]);
 
   return (
@@ -62,8 +59,8 @@ export function WhatsAppButton({
         </a>
       </div>
 
-      {/* WhatsApp butonu */}
-      <div className="group flex items-center">
+      {/* WhatsApp butonu (masaüstünde görünür, mobilde alt sabit çubukta yer alır) */}
+      <div className="group hidden md:flex items-center">
         <span
           aria-hidden="true"
           className="mr-3 hidden md:inline-block pointer-events-none opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 rounded-full bg-charcoal/90 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-white shadow-lg whitespace-nowrap border border-white/10"
